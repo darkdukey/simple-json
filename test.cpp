@@ -9,6 +9,7 @@
 #include <unordered_map>
 
 #include "json98.h"
+#include "log.h"
 
 using namespace json98;
 using namespace std;
@@ -24,10 +25,6 @@ CHECK_TRAIT(is_copy_assignable<Json>);
 // CHECK_TRAIT(is_nothrow_move_assignable<Json>);
 CHECK_TRAIT(is_nothrow_destructible<Json>);
 
-void log(const string& msg) {
-    cout << msg << endl;
-}
-
 void parse_from_stdin() {
     string buf;
     string line;
@@ -37,9 +34,9 @@ void parse_from_stdin() {
 
     auto json = Json::parse(buf);
     if (json.is_valid()) {
-        printf("Result: %s\n", json.dump().c_str());
+        LOGD("Result: " << json.dump());
     } else {
-        printf("Invalid json\n");
+        LOGD("Invalid json");
     }
 }
 
@@ -49,23 +46,23 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-    log("===== Test Parsing =====");
+    LOGD("===== Test Parsing =====");
 
     const string simple_test =
         R"({"k1":"v1", "k2":42, "k3":3.14159, "k4":["a",123,true,false,null]})";
 
     auto json = Json::parse(simple_test);
 
-    std::cout << "k1: " << json["k1"].string_value() << "\n";
-    std::cout << "k2: " << json["k2"].int_value() << "\n";
-    std::cout << "k3: " << json["k3"].float_value() << "\n";
-    std::cout << "k4: " << json["k4"].dump() << "\n";
+    LOGD( "k1: " << json["k1"].string_value() );
+    LOGD( "k2: " << json["k2"].int_value() );
+    LOGD( "k3: " << json["k3"].float_value() );
+    LOGD( "k4: " << json["k4"].dump() );
 
-    for (auto &k : json["k3"].array_items()) {
-        std::cout << "    - " << k.dump() << "\n";
+    for (auto &k : json["k4"].array_items()) {
+        LOGD( "    - " << k.dump() );
     }
 
-    log("===== Test New line =====");
+    LOGD("===== Test New line =====");
 
 // Line break test
     const string json_with_newline = 
@@ -74,14 +71,14 @@ int main(int argc, char **argv) {
     auto new_line = Json::parse(json_with_newline);
 
     if (new_line.is_valid()) {
-        std::cout << new_line.dump() << std::endl;
-        std::cout << new_line["k1"].string_value() << std::endl;
+        LOGD( new_line.dump() );
+        LOGD( new_line["k1"].string_value() );
     } else {
-        std::cout << "Invalid json" << std::endl;
+        LOGD( "Invalid json" );
     }
 
 
-    std::cout << "===== Test Unicode =====" << std::endl;
+    LOGD("===== Test Unicode =====");
 
 // Unicode test
     const string unicode_escape_test =
@@ -92,11 +89,11 @@ int main(int argc, char **argv) {
 
     Json uni = Json::parse(unicode_escape_test);
     assert(uni[0].string_value().size() == (sizeof utf8) - 1);
-    assert(std::memcmp(uni[0].string_value().data(), utf8, sizeof utf8) == 0);
+    assert(memcmp(uni[0].string_value().data(), utf8, sizeof utf8) == 0);
 
 // Test create json
 
-    log("===== Test Json creation =====");
+    LOGD("===== Test Json creation =====");
     Json create_json;
     create_json["string_value"] = "this is a string value \n and a new line";
     create_json["float_value"] = 3.1415926;
@@ -104,20 +101,20 @@ int main(int argc, char **argv) {
     create_json["bool_value"] = true;
     // create_json["array_value"] = {1, 2, 3, 4};
 
-    log(create_json.dump());
+    LOGD(create_json.dump());
 
 // Comment support
 
 // Array support
-    // std::list<int> l1 { 1, 2, 3 };
-    // std::vector<int> l2 { 1, 2, 3 };
-    // std::set<int> l3 { 1, 2, 3 };
+    // list<int> l1 { 1, 2, 3 };
+    // vector<int> l2 { 1, 2, 3 };
+    // set<int> l3 { 1, 2, 3 };
     // assert(Json(l1) == Json(l2));
     // assert(Json(l2) == Json(l3));
 
 // Compare support
-    // std::map<string, string> m1 { { "k1", "v1" }, { "k2", "v2" } };
-    // std::map<string, string> m2 { { "k1", "v1" }, { "k2", "v2" } };
+    // map<string, string> m1 { { "k1", "v1" }, { "k2", "v2" } };
+    // map<string, string> m2 { { "k1", "v1" }, { "k2", "v2" } };
     // assert(Json(m1) == Json(m2));
 
 // Serialization
@@ -129,7 +126,7 @@ int main(int argc, char **argv) {
     //     Json to_json() const { return Json::array { x, y }; }
     // };
 
-    // std::vector<Point> points = { { 1, 2 }, { 10, 20 }, { 100, 200 } };
-    // std::string points_json = Json(points).dump();
+    // vector<Point> points = { { 1, 2 }, { 10, 20 }, { 100, 200 } };
+    // string points_json = Json(points).dump();
     // printf("%s\n", points_json.c_str());
 }
