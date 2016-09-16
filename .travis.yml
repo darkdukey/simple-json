@@ -5,6 +5,7 @@ matrix:
     - os: osx
       compiler: clang
     - os: linux
+      compiler: clang
 
 script:
   - make
