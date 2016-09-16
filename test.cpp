@@ -62,6 +62,9 @@ int main(int argc, char **argv) {
         LOGD( "    - " << k.dump() );
     }
 
+    LOGD("");
+    LOGD("");
+
     LOGD("===== Test New line =====");
 
 // Line break test
@@ -77,10 +80,13 @@ int main(int argc, char **argv) {
         LOGD( "Invalid json" );
     }
 
+    LOGD("");
+    LOGD("");
 
-    LOGD("===== Test Unicode =====");
 
 // Unicode test
+    LOGD("===== Test Unicode =====");
+
     const string unicode_escape_test =
         R"([ "blah\ud83d\udca9blah\ud83dblah\udca9blah\u0000blah\u1234" ])";
 
@@ -91,9 +97,13 @@ int main(int argc, char **argv) {
     assert(uni[0].string_value().size() == (sizeof utf8) - 1);
     assert(memcmp(uni[0].string_value().data(), utf8, sizeof utf8) == 0);
 
-// Test create json
+    LOGD("");
+    LOGD("");
 
+
+// Test create json
     LOGD("===== Test Json creation =====");
+
     Json create_json;
     create_json["string_value"] = "this is a string value \n and a new line";
     create_json["float_value"] = 3.1415926;
@@ -102,6 +112,22 @@ int main(int argc, char **argv) {
     // create_json["array_value"] = {1, 2, 3, 4};
 
     LOGD(create_json.dump());
+
+    LOGD("");
+    LOGD("");
+
+// Big Integer value support
+    LOGD("===== Test big integer value support =====");
+
+    const string big_int_test = R"({"big_int_value":2147483648})";
+    Json big_int_test_json = Json::parse(big_int_test);
+    LOGD("The integer value is: " << big_int_test_json["big_int_value"].int_value());
+    LOGD("The long value is: " << big_int_test_json["big_int_value"].long_value());
+    LOGD("The float value is: " << big_int_test_json["big_int_value"].float_value());
+    LOGD("The double value is: " << big_int_test_json["big_int_value"].double_value());
+
+    LOGD("");
+    LOGD("");
 
 // Comment support
 

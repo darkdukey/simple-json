@@ -32,7 +32,7 @@ namespace json98 {
                 : _type(NUL), _valid(true) { }
 
         Json(int i)
-                : _type(INT), _i(i), _valid(true) { }
+                : _type(INT), _d(i), _valid(true) { }
 
         Json(double d)
                 : _type(NUMBER), _d(d), _valid(true) { }
@@ -71,7 +71,7 @@ namespace json98 {
                 case NUL:
                     break;
                 case INT:
-                    lhs._i = rhs._i;
+                    lhs._d = rhs._d;
                     break;
                 case NUMBER:
                     lhs._d = rhs._d;
@@ -118,6 +118,10 @@ namespace json98 {
         int int_value() const;
 
         int int_value(int default_value) const;
+
+        long long_value() const;
+
+        long long_value(long default_value) const;
 
         bool bool_value() const;
 
@@ -177,7 +181,6 @@ namespace json98 {
         union {
             double _d;
             bool _b;
-            int _i;
         };
         string_type _s;
         array_type _a;

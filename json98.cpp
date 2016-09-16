@@ -18,7 +18,7 @@ Json Json::nul_json;
 
 int Json::int_value() const
 {
-    return _i;
+    return (int)_d;
 }
 
 int Json::int_value(int v) const
@@ -29,6 +29,21 @@ int Json::int_value(int v) const
     }
 
     return int_value();
+}
+
+long Json::long_value() const
+{
+    return (long)_d;
+}
+
+long Json::long_value(long v) const
+{
+    if(is_null())
+    {
+        return v;
+    }
+
+    return long_value();
 }
 
 bool Json::bool_value() const
@@ -146,15 +161,15 @@ const Json::string_type Json::dump() const
     switch (type())
     {
         case NUL:
-            return "nul";
+            return "null";
         case INT:
-            snprintf(buf, sizeof(buf), "%d", _i);
+            snprintf(buf, sizeof(buf), "%d", int_value());
             return buf;
         case NUMBER:
-            snprintf(buf, sizeof(buf), "%f", _d);
+            snprintf(buf, sizeof(buf), "%f", float_value());
             return buf;
         case BOOL:
-            return _b ? "\"true\"" : "\"false\"";
+            return _b ? "true" : "false";
         case STRING:
             return encode(_s);
         case ARRAY:
@@ -180,7 +195,7 @@ const Json::string_type Json::dump() const
                 {
                     const Json::string_type& k = (*it).first;
                     const Json& j = (*it).second;
-                    s += '\"' + k + "\":" + j.dump() + ",";
+                    s += "\"" + k + "\":" + j.dump() + ",";
                 }
                 size_t l = s.length();
                 if (s[l-1] == ',')
@@ -359,7 +374,7 @@ struct JsonParser
                         return fail("bad \\u escape: " + esc);
                 }
 
-                long codepoint = strtol(esc.data(), nullptr, 16);
+                long codepoint = strtol(esc.data(), NULL, 16);
 
                 // JSON specifies that characters outside the BMP shall be encoded as a pair
                 // of 4-hex-digit \u escapes encoding their surrogate pair components. Check
@@ -429,7 +444,7 @@ struct JsonParser
 
         if (str[i] != '.' && str[i] != 'e' && str[i] != 'E' && (i - start_pos) <= MAX_DIGITS)
         {
-            return Json(atoi(str.c_str() + start_pos));
+            return Json(stod(str.c_str() + start_pos));
         }
 
         // Decimal part
