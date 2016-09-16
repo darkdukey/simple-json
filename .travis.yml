@@ -1,3 +1,5 @@
+sudo: required
+dist: precise
 language: cpp
 
 matrix:
@@ -5,7 +7,24 @@ matrix:
     - os: osx
       compiler: clang
     - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env: COMPILER=g++-4.9
+    - os: linux
       compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
+          packages:
+            - clang-3.7
+      env: COMPILER=clang++-3.7
 
 script:
   - make
