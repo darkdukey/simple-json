@@ -1,6 +1,11 @@
 /****************************************************************************
  Copyright (c) 2015-2016 Nite Luo
  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+
+ For issues and features please visit
+
+ https://github.com/darkdukey/simple-json
+ 
  ****************************************************************************/
 
 #include "json98.h"

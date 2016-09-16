@@ -2,6 +2,11 @@
 /****************************************************************************
  Copyright (c) 2015-2016 Nite Luo
  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+
+ For issues and features please visit
+
+ https://github.com/darkdukey/simple-json
+
  ****************************************************************************/
 
 #ifndef _JSON_98_H_
@@ -11,6 +16,9 @@
 #include <vector>
 #include <map>
 
+// 0x00 HI ME LO
+// 00   01 00 00
+#define JSON_98_VERSION 0x00010000
 
 namespace json98 {
 
